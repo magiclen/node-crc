@@ -1,0 +1,39 @@
+{
+  "name": "node-crc",
+  "version": "1.0.0",
+  "description": "To compute crc values by providing the length of bits, expression, reflection, an initial value and a final xor value. It has built-in CRC-8-ATM, CRC-8-CDMA, CRC-16-IBM, CRC16-CCITT, CRC-32-IEEE, CRC-32-C, CRC-64-ISO and CRC-64-ECMA functions.",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test/mocha --napi-modules --reporter spec",
+    "benchmark": "node test/mocha --napi-modules --reporter spec benchmark"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/magiclen/node-crc.git"
+  },
+  "keywords": [
+    "nodejs",
+    "crc",
+    "crc8",
+    "crc16",
+    "crc32",
+    "crc64"
+  ],
+  "engines": {
+    "node": ">=8.0.0"
+  },
+  "author": "Magic Len <len@magiclen.org> (https://magiclen.org)",
+  "bugs": {
+    "url": "https://github.com/magiclen/node-crc/issues"
+  },
+  "homepage": "https://github.com/magiclen/node-crc#readme",
+  "license": "MIT",
+  "devDependencies": {
+    "chai": "^4.0.2",
+    "mocha": "^3.4.2",
+    "mocha-logger": "^1.0.5"
+  },
+  "dependencies": {
+    "bindings": "^1.2.1"
+  }
+}
