@@ -38,7 +38,7 @@ var result = crc.crc(24, false, 0x00864cfb, 0x00000000, 0x00b704ce, 0x00000000, 
 // Arguments: the length of bits, reflection, low bits of expression, high bits of expression, low bits of the initial value, high bits of the initial value, low bits of the final xor value, high bits of the final xor value, the source data buffer
 ```
 
-To simply the usage, there are several common versions of CRC whose computing functions are already built-in.
+To simplify the usage, there are several common versions of CRC whose computing functions are already built-in.
 
   * crc8(crc8atm)
   * crc8cdma
