@@ -1,4 +1,4 @@
-Fast String Search
+CRC For Node.js
 =================================
 
 ## Introduction
