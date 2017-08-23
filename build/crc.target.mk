@@ -35,10 +35,10 @@ CFLAGS_CC_Debug := \
 	-std=gnu++0x
 
 INCS_Debug := \
-	-I/home/magiclen/.node-gyp/8.1.2/include/node \
-	-I/home/magiclen/.node-gyp/8.1.2/src \
-	-I/home/magiclen/.node-gyp/8.1.2/deps/uv/include \
-	-I/home/magiclen/.node-gyp/8.1.2/deps/v8/include
+	-I/home/magiclen/.node-gyp/8.4.0/include/node \
+	-I/home/magiclen/.node-gyp/8.4.0/src \
+	-I/home/magiclen/.node-gyp/8.4.0/deps/uv/include \
+	-I/home/magiclen/.node-gyp/8.4.0/deps/v8/include
 
 DEFS_Release := \
 	'-DNODE_GYP_MODULE_NAME=crc' \
@@ -70,10 +70,10 @@ CFLAGS_CC_Release := \
 	-std=gnu++0x
 
 INCS_Release := \
-	-I/home/magiclen/.node-gyp/8.1.2/include/node \
-	-I/home/magiclen/.node-gyp/8.1.2/src \
-	-I/home/magiclen/.node-gyp/8.1.2/deps/uv/include \
-	-I/home/magiclen/.node-gyp/8.1.2/deps/v8/include
+	-I/home/magiclen/.node-gyp/8.4.0/include/node \
+	-I/home/magiclen/.node-gyp/8.4.0/src \
+	-I/home/magiclen/.node-gyp/8.4.0/deps/uv/include \
+	-I/home/magiclen/.node-gyp/8.4.0/deps/v8/include
 
 OBJS := \
 	$(obj).target/$(TARGET)/src/crc.o

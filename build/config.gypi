@@ -11,6 +11,8 @@
     "asan": 0,
     "coverage": "false",
     "debug_devtools": "node",
+    "debug_http2": "false",
+    "debug_nghttp2": "false",
     "force_dynamic_crt": 0,
     "gas_version": "2.23",
     "host_arch": "x64",
@@ -58,10 +60,11 @@
     "v8_optimized_debug": 0,
     "v8_promise_internal_field_count": 1,
     "v8_random_seed": 0,
-    "v8_use_snapshot": "true",
+    "v8_trace_maps": 0,
+    "v8_use_snapshot": "false",
     "want_separate_host_toolset": 0,
     "want_separate_host_toolset_mkpeephole": 0,
-    "nodedir": "/home/magiclen/.node-gyp/8.1.2",
+    "nodedir": "/home/magiclen/.node-gyp/8.4.0",
     "standalone_static_library": 1
   }
 }
