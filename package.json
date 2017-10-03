@@ -5,8 +5,8 @@
   "main": "index.js",
   "typings": "index.d.ts",
   "scripts": {
-    "test": "mocha --napi-modules --reporter spec",
-    "benchmark": "mocha --napi-modules --reporter spec benchmark"
+    "test": "mocha --reporter spec",
+    "benchmark": "mocha --reporter spec benchmark"
   },
   "repository": {
     "type": "git",
