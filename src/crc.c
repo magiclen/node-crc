@@ -312,7 +312,7 @@ napi_value crc8cdma(napi_env env, napi_callback_info info){
         return toBuffer(env, sum, 8);
 }
 
-void Init (napi_env env, napi_value exports, napi_value module, void* priv) {
+napi_value Init (napi_env env, napi_value exports) {
         napi_property_descriptor allDesc[] = {
                 {"crc", 0, crc, 0, 0, 0, napi_default, 0},
                 {"crc64iso", 0, crc64iso, 0, 0, 0, napi_default, 0},
@@ -332,6 +332,7 @@ void Init (napi_env env, napi_value exports, napi_value module, void* priv) {
                 {"crc8cdma", 0, crc8cdma, 0, 0, 0, napi_default, 0}
         };
         napi_define_properties(env, exports, 16, allDesc);
+        return exports;
 }
 
 NAPI_MODULE(crc, Init);
