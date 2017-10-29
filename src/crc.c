@@ -81,8 +81,7 @@ uint64_t crcInternal(uint64_t expression, char* data, size_t dataLength, uint64_
 
 napi_value createFalse(napi_env env){
         napi_value result;
-        napi_create_int32(env, 0, &result);
-        napi_coerce_to_bool(env, result, &result);
+        napi_get_boolean(env, false, &result);
         return result;
 }
 

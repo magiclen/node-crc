@@ -5,7 +5,7 @@ CRC For Node.js
 
 This module can compute different types of CRC checksum by using N-API.
 
-NOTICE: N-API is a new experimental feature in Node.js 8. Currently, it can be used by adding `--napi-modules` option when executing Node.js 8.
+NOTICE: N-API is a new experimental feature in Node.js 8.
 
 ## Installation
 
