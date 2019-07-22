@@ -7,6 +7,7 @@ declare module "node-crc" {
     export function crc64iso(data: Buffer): Buffer | boolean;
 
     /**
+     * bits = 64, reflection = true, exp = 0x95AC9329AC4BC9B5u64, ini = 0x0000000000000000, fix = 0x0000000000000000
      * @param {Buffer!} data
      * @returns {Buffer | boolean} If there is any error in the computation, it will return false.
      */
