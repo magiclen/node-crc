@@ -48,6 +48,7 @@ To simplify the usage, there are several common versions of CRC whose computing 
   * crc32c
   * crc64(crc64ecma)
   * crc64iso
+  * crc64jones
 
 Input data and output data are buffers.
 
