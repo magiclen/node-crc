@@ -45,11 +45,15 @@ describe('CRC-32 Family', function() {
 describe('CRC-64 Family', function() {
   it('should calculate CRC-64(CRC-64-ECMA)', function() {
     var result = crc.crc64(Buffer.from('hello', 'utf8')).toString('hex');
-    expect(result).to.equal('ec5388479a7c913f');
+    expect(result).to.equal('40544a306137b6ec');
   });
   it('should calculate CRC-64-ISO', function() {
     var result = crc.crc64iso(Buffer.from('hello', 'utf8')).toString('hex');
     expect(result).to.equal('3c3eeee2d8100000');
+  });
+  it('should calculate CRC-64-WE', function() {
+    var result = crc.crc64we(Buffer.from('hello', 'utf8')).toString('hex');
+    expect(result).to.equal('ec5388479a7c913f');
   });
   it('should calculate CRC-64-JONES', function() {
     var result = crc.crc64jones(Buffer.from('123456789', 'utf8')).toString('hex');
