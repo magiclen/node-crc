@@ -2,7 +2,7 @@
   "targets": [
     {
       "target_name": "crc",
-      "sources": [ "./src/crc.c" ]
+      "sources": [ "./c/crc.c" ]
     }
   ]
 }
