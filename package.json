@@ -6,7 +6,7 @@
   "typings": "index.d.ts",
   "scripts": {
     "test": "mocha tests/**/*.test.js",
-    "benchmark": "mocha --reporter spec benches",
+    "benchmark": "mocha benches",
     "build": "node-gyp rebuild",
     "prepare": "npm run build",
     "prepublishOnly": "npm run test"
