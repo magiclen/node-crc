@@ -109,6 +109,10 @@ const result = crc.crc32(Buffer.from('hello', 'utf8')).toString('hex');
 const result2 = crc.crc64(Buffer.from('world', 'utf8')).toString('hex');
 ```
 
+## TODO
+
+1. CRC class to compute large data
+
 ## License
 
 [MIT](LICENSE)
