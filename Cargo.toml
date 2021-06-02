@@ -1,0 +1,26 @@
+[package]
+name = "node-crc"
+version = "2.0.0"
+description = "To compute CRC values by providing the length of bits, expression, reflection, an initial value and a final xor value. It has many built-in CRC functions."
+authors = ["Magic Len <len@magiclen.org> (https://magiclen.org)"]
+license = "MIT"
+edition = "2018"
+exclude = ["index.node"]
+publish = false
+
+[lib]
+crate-type = ["cdylib"]
+
+[profile.release]
+lto = true
+codegen-units = 1
+
+[dependencies.crc-any]
+version = "2"
+default-features = false
+features = ["heapless"]
+
+[dependencies.neon]
+version = "0.8"
+default-features = false
+features = ["napi-6"]

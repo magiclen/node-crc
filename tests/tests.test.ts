@@ -1,7 +1,7 @@
-const expect = require("chai").expect;
-const { describe, it } = require("mocha");
+import { describe, it } from "mocha";
+import { expect } from "chai";
 
-const crc = require("..");
+import * as crc from "..";
 
 describe("CRC-8 Family", function () {
     it("should calculate CRC-8(CRC-8-ATM)", function () {
@@ -9,7 +9,7 @@ describe("CRC-8 Family", function () {
         expect(result).to.equal("92");
     });
     it("should calculate CRC-8-CDMA", function () {
-        var result = crc.crc8cdma(Buffer.from("hello", "utf8")).toString("hex");
+        var result = crc.crc8cdma2000(Buffer.from("hello", "utf8")).toString("hex");
         expect(result).to.equal("4c");
     });
 });
@@ -20,8 +20,22 @@ describe("CRC-16 Family", function () {
         expect(result).to.equal("34d2");
     });
     it("should calculate CRC-16-CCITT(CRC-CCITT)", function () {
-        var result = crc.crcccitt(Buffer.from("hello", "utf8")).toString("hex");
+        var result = crc.crc16ccitt_false(Buffer.from("hello", "utf8")).toString("hex");
         expect(result).to.equal("d26e");
+    });
+});
+
+describe("CRC-24 Family", function () {
+    it("should calculate CRC-24", function () {
+        const result = crc.crc24(Buffer.from("hello", "utf8")).toString("hex");
+        expect(result).to.equal("47f58a");
+    });
+
+    it("should calculate CRC-24 (using poly)", function () {
+        const result = crc.crc(
+            0x00864cfb, 0x00000000, 24, 0x00b704ce, 0x00000000, 0x00000000, 0x00000000, false, Buffer.from("hello", "utf8"),
+        ).toString("hex");
+        expect(result).to.equal("47f58a");
     });
 });
 
@@ -56,14 +70,5 @@ describe("CRC-64 Family", function () {
     it("should calculate CRC-64-JONES", function () {
         const result = crc.crc64jones(Buffer.from("123456789", "utf8")).toString("hex");
         expect(result).to.equal("e9c6d914c4b8d9ca");
-    });
-});
-
-describe("CRC-24 Family", function () {
-    it("should calculate CRC-24", function () {
-        const result = crc.crc(
-            24, false, 0x00864cfb, 0x00000000, 0x00b704ce, 0x00000000, 0x00000000, 0x00000000, Buffer.from("hello", "utf8"),
-        ).toString("hex");
-        expect(result).to.equal("47f58a");
     });
 });

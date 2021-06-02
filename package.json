@@ -1,13 +1,14 @@
 {
   "name": "node-crc",
-  "version": "1.3.2",
-  "description": "To compute CRC values by providing the length of bits, expression, reflection, an initial value and a final xor value. It has built-in CRC-8-ATM, CRC-8-CDMA, CRC-16-IBM, CRC16-CCITT, CRC-32-IEEE, CRC-32-C, CRC-64-ISO and CRC-64-ECMA functions.",
-  "main": "src/lib.js",
-  "typings": "index.d.ts",
+  "version": "2.0.0",
+  "description": "To compute CRC values by providing the length of bits, expression, reflection, an initial value and a final xor value. It has many built-in CRC functions.",
+  "main": "lib/lib.js",
+  "typings": "lib/lib.d.ts",
   "scripts": {
-    "test": "mocha tests/**/*.test.js",
-    "benchmark": "mocha benches",
-    "build": "node-gyp rebuild",
+    "test": "mocha -r ts-node/register tests/**/*.test.ts",
+    "dev": "tsc -w",
+    "build": "cargo-cp-artifact -nc index.node -- cargo build --release --message-format=json-render-diagnostics && tsc",
+    "install": "npm run build",
     "prepare": "npm run build",
     "prepublishOnly": "npm run test"
   },
@@ -19,7 +20,7 @@
     "url": "git+https://github.com/magiclen/node-crc.git"
   },
   "keywords": [
-    "nodejs",
+    "node.js",
     "crc",
     "crc8",
     "crc16",
@@ -33,14 +34,18 @@
   },
   "homepage": "https://magiclen.org/node-js-crc/",
   "dependencies": {
-    "@types/node": "^15.6.1",
-    "bindings": "^1.3.0"
+    "@types/node": "^15.6.2",
+    "cargo-cp-artifact": "^0.1"
   },
   "devDependencies": {
+    "@types/chai": "^4.2.18",
+    "@types/mocha": "^8.2.2",
+    "@typescript-eslint/eslint-plugin": "^4.26.0",
+    "@typescript-eslint/parser": "^4.26.0",
     "chai": "^4.3.4",
-    "crc": "^3.8.0",
     "eslint": "^7.27.0",
     "mocha": "^8.4.0",
-    "mocha-logger": "^1.0.7"
+    "ts-node": "^10.0.0",
+    "typescript": "^4.3.2"
   }
 }
