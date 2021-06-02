@@ -5,6 +5,8 @@ CRC For Node.js
 
 To compute CRC values by providing the length of bits, expression, reflection, an initial value and a final xor value. It has many built-in CRC functions.
 
+You need to set up the Rust development environment: [rustup](https://rustup.rs/)
+
 ## Usage
 
 You can use `crc` function to compute a CRC value by providing the length of bits, expression, reflection, an initial value and a final xor value. For example, if you want to compute a CRC-24 value.
