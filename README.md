@@ -3,6 +3,8 @@ CRC For Node.js
 
 [![CI](https://github.com/magiclen/node-crc/actions/workflows/ci.yml/badge.svg)](https://github.com/magiclen/node-crc/actions/workflows/ci.yml)
 
+To compute CRC values by providing the length of bits, expression, reflection, an initial value and a final xor value. It has many built-in CRC functions.
+
 ## Usage
 
 You can use `crc` function to compute a CRC value by providing the length of bits, expression, reflection, an initial value and a final xor value. For example, if you want to compute a CRC-24 value.
