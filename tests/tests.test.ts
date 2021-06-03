@@ -9,7 +9,7 @@ describe("CRC-8 Family", function () {
         expect(result).to.equal("92");
     });
     it("should calculate CRC-8-CDMA", function () {
-        var result = crc.crc8cdma2000(Buffer.from("hello", "utf8")).toString("hex");
+        const result = crc.crc8cdma2000(Buffer.from("hello", "utf8")).toString("hex");
         expect(result).to.equal("4c");
     });
 });
@@ -20,7 +20,7 @@ describe("CRC-16 Family", function () {
         expect(result).to.equal("34d2");
     });
     it("should calculate CRC-16-CCITT(CRC-CCITT)", function () {
-        var result = crc.crc16ccitt_false(Buffer.from("hello", "utf8")).toString("hex");
+        const result = crc.crc16ccitt_false(Buffer.from("hello", "utf8")).toString("hex");
         expect(result).to.equal("d26e");
     });
 });
