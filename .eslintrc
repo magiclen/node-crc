@@ -305,17 +305,5 @@
     "wrap-regex": [
       "error"
     ]
-  },
-  "overrides": [
-    {
-      /* for typescript class method overload */
-      "files": [
-        "*.ts",
-        "*.tsx"
-      ],
-      "rules": {
-        "no-dupe-class-members": "off"
-      }
-    }
-  ]
+  }
 }
