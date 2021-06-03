@@ -1,3 +1,5 @@
+/* eslint-disable camelcase */
+
 const _crc = require("../index.node");
 
 /**

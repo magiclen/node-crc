@@ -7,10 +7,13 @@
     "browser": true,
     "node": true
   },
-  "extends": "eslint:recommended",
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
   "rules": {
-    "no-unused-vars": "off",
-    "@typescript-eslint/no-unused-vars": "error",
+    "@typescript-eslint/no-var-requires": "warn",
     "array-bracket-newline": [
       "error",
       {
@@ -34,13 +37,12 @@
       "error",
       "1tbs"
     ],
-    // "camelcase": [
-    //   "error",
-    //   {
-    //     "properties": "never",
-
-    //   }
-    // ],
+    "camelcase": [
+      "error",
+      {
+        "properties": "never"
+      }
+    ],
     "comma-dangle": [
       "error",
       "always-multiline"
