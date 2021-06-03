@@ -1,6 +1,6 @@
 [package]
 name = "node-crc"
-version = "2.0.0"
+version = "2.0.1"
 description = "To compute CRC values by providing the length of bits, expression, reflection, an initial value and a final xor value. It has many built-in CRC functions."
 authors = ["Magic Len <len@magiclen.org> (https://magiclen.org)"]
 license = "MIT"

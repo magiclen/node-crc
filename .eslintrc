@@ -1,8 +1,11 @@
 {
+  "parser": "@typescript-eslint/parser",
+  "plugins": [
+    "@typescript-eslint"
+  ],
   "env": {
     "browser": true,
-    "node": true,
-    "es2021": true
+    "node": true
   },
   "extends": "eslint:recommended",
   "rules": {
@@ -29,12 +32,13 @@
       "error",
       "1tbs"
     ],
-    "camelcase": [
-      "error",
-      {
-        "properties": "never"
-      }
-    ],
+    // "camelcase": [
+    //   "error",
+    //   {
+    //     "properties": "never",
+
+    //   }
+    // ],
     "comma-dangle": [
       "error",
       "always-multiline"

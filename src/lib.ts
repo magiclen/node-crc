@@ -3,8 +3,12 @@ const _crc = require("../index.node");
 /**
  * Create a CRC instance by providing the length of bits, expression, reflection, an initial value and a final xor value.
  */
-export const crc = (polyLow: number, polyHigh: number, bit: number, initialLow: number, initialHigh: number, finalXorLow: number, finalXorHigh: number, reflect: boolean, data: Buffer): Buffer => {
-    return _crc.crc(polyLow, polyHigh, bit, initialLow, initialHigh, finalXorLow, finalXorHigh, reflect, data);
+export const crc = (
+    polyLow: number, polyHigh: number, bit: number, initialLow: number, initialHigh: number, finalXorLow: number, finalXorHigh: number, reflect: boolean, data: Buffer
+): Buffer => {
+    return _crc.crc(
+        polyLow, polyHigh, bit, initialLow, initialHigh, finalXorLow, finalXorHigh, reflect, data
+    );
 };
 
 /**
@@ -587,4 +591,3 @@ export const crc64we = (data: Buffer): Buffer => {
 export const crc64jones = (data: Buffer): Buffer => {
     return _crc.crc64jones(data);
 };
-
