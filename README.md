@@ -87,9 +87,9 @@ To simplify the usage, there are several common versions of CRC whose computing 
 * crc24os9
 * crc30cdma
 * crc32
-* It also called `crc32b` in `mhash`.
+    * It also called `crc32b` in `mhash`.
 * crc32mhash
-* `mhash` is a common library which has two weird versions of CRC32 called `crc32` and `crc32b`. `crc32` and `crc32mhash` in this module are `crc32b` and `crc32` in mhash respectively.
+    * `mhash` is a common library which has two weird versions of CRC32 called `crc32` and `crc32b`. `crc32` and `crc32mhash` in this module are `crc32b` and `crc32` in mhash respectively.
 * crc32bzip2
 * crc32c
 * crc32d
