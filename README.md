@@ -12,7 +12,7 @@ You need to set up the Rust development environment: [rustup](https://rustup.rs/
 You can use `crc` function to compute a CRC value by providing the length of bits, expression, reflection, an initial value and a final xor value. For example, if you want to compute a CRC-24 value.
 
 ```javascript
-const result = crc.crc(0x00864cfb, 0x00000000, 24, 0x00b704ce, 0x00000000, 0x00000000, 0x00000000, false, Buffer.from('hello', 'utf8')).toString('hex');
+const result = crc.crc(0x00864cfb, 0x00000000, 24, 0x00b704ce, 0x00000000, 0x00000000, 0x00000000, false, Buffer.from("hello", "utf8")).toString("hex");
 // Arguments: low bits of expression, high bits of expression, the length of bits, low bits of the initial value, high bits of the initial value, low bits of the final xor value, high bits of the final xor value, reflection, the source data buffer
 ```
 
@@ -109,8 +109,8 @@ Input data and output data are buffers.
 For instance,
 
 ```javascript
-const result = crc.crc32(Buffer.from('hello', 'utf8')).toString('hex');
-const result2 = crc.crc64(Buffer.from('world', 'utf8')).toString('hex');
+const result = crc.crc32(Buffer.from("hello", "utf8")).toString("hex");
+const result2 = crc.crc64(Buffer.from("world", "utf8")).toString("hex");
 ```
 
 ## TODO
