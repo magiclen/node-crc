@@ -1,6 +1,6 @@
 [package]
 name = "node-crc"
-version = "2.0.4"
+version = "2.0.11"
 edition = "2018"
 repository = "https://github.com/magiclen/node-crc"
 homepage = "https://magiclen.org/node-js-crc/"
@@ -23,6 +23,6 @@ default-features = false
 features = ["heapless"]
 
 [dependencies.neon]
-version = "0.8"
+version = "0.9"
 default-features = false
 features = ["napi-6"]
