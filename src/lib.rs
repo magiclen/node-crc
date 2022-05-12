@@ -2,6 +2,7 @@ extern crate crc_any;
 
 use neon::handle::Managed;
 use neon::prelude::*;
+use neon::types::buffer::TypedArray;
 
 use crc_any::*;
 
@@ -52,9 +53,8 @@ fn js_number_to_u32<'a, T: Managed>(
 fn to_js_buffer_1<'a>(cx: &mut FunctionContext<'a>, u: u8) -> JsResult<'a, JsBuffer> {
     let mut buffer = unsafe { JsBuffer::uninitialized(cx, 1)? };
 
-    cx.borrow_mut(&mut buffer, |buffer| {
-        buffer.as_mut_slice()[0] = u;
-    });
+    let slice = buffer.as_mut_slice(cx);
+    slice[0]= u;
 
     Ok(buffer)
 }
@@ -62,9 +62,9 @@ fn to_js_buffer_1<'a>(cx: &mut FunctionContext<'a>, u: u8) -> JsResult<'a, JsBuf
 fn to_js_buffer_2<'a>(cx: &mut FunctionContext<'a>, u: u16) -> JsResult<'a, JsBuffer> {
     let mut buffer = unsafe { JsBuffer::uninitialized(cx, 2)? };
 
-    cx.borrow_mut(&mut buffer, |buffer| {
-        buffer.as_mut_slice().copy_from_slice(&u.to_be_bytes());
-    });
+    let slice = buffer.as_mut_slice(cx);
+
+    slice.copy_from_slice(&u.to_be_bytes());
 
     Ok(buffer)
 }
@@ -72,9 +72,9 @@ fn to_js_buffer_2<'a>(cx: &mut FunctionContext<'a>, u: u16) -> JsResult<'a, JsBu
 fn to_js_buffer_3<'a>(cx: &mut FunctionContext<'a>, u: u32) -> JsResult<'a, JsBuffer> {
     let mut buffer = unsafe { JsBuffer::uninitialized(cx, 3)? };
 
-    cx.borrow_mut(&mut buffer, |buffer| {
-        buffer.as_mut_slice().copy_from_slice(&u.to_be_bytes()[1..]);
-    });
+    let slice = buffer.as_mut_slice(cx);
+
+    slice.copy_from_slice(&u.to_be_bytes()[1..]);
 
     Ok(buffer)
 }
@@ -82,9 +82,9 @@ fn to_js_buffer_3<'a>(cx: &mut FunctionContext<'a>, u: u32) -> JsResult<'a, JsBu
 fn to_js_buffer_4<'a>(cx: &mut FunctionContext<'a>, u: u32) -> JsResult<'a, JsBuffer> {
     let mut buffer = unsafe { JsBuffer::uninitialized(cx, 4)? };
 
-    cx.borrow_mut(&mut buffer, |buffer| {
-        buffer.as_mut_slice().copy_from_slice(&u.to_be_bytes());
-    });
+    let slice = buffer.as_mut_slice(cx);
+
+    slice.copy_from_slice(&u.to_be_bytes());
 
     Ok(buffer)
 }
@@ -92,9 +92,9 @@ fn to_js_buffer_4<'a>(cx: &mut FunctionContext<'a>, u: u32) -> JsResult<'a, JsBu
 fn to_js_buffer_5<'a>(cx: &mut FunctionContext<'a>, u: u64) -> JsResult<'a, JsBuffer> {
     let mut buffer = unsafe { JsBuffer::uninitialized(cx, 5)? };
 
-    cx.borrow_mut(&mut buffer, |buffer| {
-        buffer.as_mut_slice().copy_from_slice(&u.to_be_bytes()[3..]);
-    });
+    let slice = buffer.as_mut_slice(cx);
+
+    slice.copy_from_slice(&u.to_be_bytes()[3..]);
 
     Ok(buffer)
 }
@@ -102,9 +102,9 @@ fn to_js_buffer_5<'a>(cx: &mut FunctionContext<'a>, u: u64) -> JsResult<'a, JsBu
 fn to_js_buffer_8<'a>(cx: &mut FunctionContext<'a>, u: u64) -> JsResult<'a, JsBuffer> {
     let mut buffer = unsafe { JsBuffer::uninitialized(cx, 8)? };
 
-    cx.borrow_mut(&mut buffer, |buffer| {
-        buffer.as_mut_slice().copy_from_slice(&u.to_be_bytes());
-    });
+    let slice = buffer.as_mut_slice(cx);
+
+    slice.copy_from_slice(&u.to_be_bytes());
 
     Ok(buffer)
 }
@@ -174,21 +174,21 @@ fn crc(mut cx: FunctionContext) -> JsResult<JsBuffer> {
 
     let buffer = cx.argument::<JsBuffer>(8)?;
 
-    let crc = cx.borrow(&buffer, |buffer| {
-        let data = buffer.as_slice();
+    let crc =  {
+        let data = buffer.as_slice(&cx);
 
         let mut crc = CRC::create_crc(poly, bit, initial, final_xor, reflect);
 
         crc.digest(data);
 
         crc.get_crc_heapless_vec_be()
-    });
+    };
 
-    let mut buffer = unsafe { JsBuffer::uninitialized(&mut cx, crc.len() as u32)? };
+    let mut buffer = unsafe { JsBuffer::uninitialized(&mut cx, crc.len())? };
 
-    cx.borrow_mut(&mut buffer, |buffer| {
-        buffer.as_mut_slice().copy_from_slice(&crc);
-    });
+    let slice = buffer.as_mut_slice(&mut cx);
+
+    slice.copy_from_slice(&crc);
 
     Ok(buffer)
 }
@@ -198,15 +198,15 @@ macro_rules! crc_functions_1 {
         fn $f(mut cx: FunctionContext) -> JsResult<JsBuffer> {
             let buffer = cx.argument::<JsBuffer>(0)?;
 
-            let crc = cx.borrow(&buffer, |buffer| {
-                let data = buffer.as_slice();
+            let crc = {
+                let data = buffer.as_slice(&cx);
 
                 let mut crc = CRCu8::$f();
 
                 crc.digest(data);
 
                 crc.get_crc()
-            });
+            };
 
             to_js_buffer_1(&mut cx, crc)
         }
@@ -225,15 +225,15 @@ macro_rules! crc_functions_2 {
         fn $f(mut cx: FunctionContext) -> JsResult<JsBuffer> {
             let buffer = cx.argument::<JsBuffer>(0)?;
 
-            let crc = cx.borrow(&buffer, |buffer| {
-                let data = buffer.as_slice();
+            let crc = {
+                let data = buffer.as_slice(&cx);
 
                 let mut crc = CRCu16::$f();
 
                 crc.digest(data);
 
                 crc.get_crc()
-            });
+            };
 
             to_js_buffer_2(&mut cx, crc)
         }
@@ -252,15 +252,15 @@ macro_rules! crc_functions_3 {
         fn $f(mut cx: FunctionContext) -> JsResult<JsBuffer> {
             let buffer = cx.argument::<JsBuffer>(0)?;
 
-            let crc = cx.borrow(&buffer, |buffer| {
-                let data = buffer.as_slice();
+            let crc = {
+                let data = buffer.as_slice(&cx);
 
                 let mut crc = CRCu32::$f();
 
                 crc.digest(data);
 
                 crc.get_crc()
-            });
+            };
 
             to_js_buffer_3(&mut cx, crc)
         }
@@ -279,15 +279,15 @@ macro_rules! crc_functions_4 {
         fn $f(mut cx: FunctionContext) -> JsResult<JsBuffer> {
             let buffer = cx.argument::<JsBuffer>(0)?;
 
-            let crc = cx.borrow(&buffer, |buffer| {
-                let data = buffer.as_slice();
+            let crc = {
+                let data = buffer.as_slice(&cx);
 
                 let mut crc = CRCu32::$f();
 
                 crc.digest(data);
 
                 crc.get_crc()
-            });
+            };
 
             to_js_buffer_4(&mut cx, crc)
         }
@@ -306,15 +306,15 @@ macro_rules! crc_functions_5 {
         fn $f(mut cx: FunctionContext) -> JsResult<JsBuffer> {
             let buffer = cx.argument::<JsBuffer>(0)?;
 
-            let crc = cx.borrow(&buffer, |buffer| {
-                let data = buffer.as_slice();
+            let crc = {
+                let data = buffer.as_slice(&cx);
 
                 let mut crc = CRCu64::$f();
 
                 crc.digest(data);
 
                 crc.get_crc()
-            });
+            };
 
             to_js_buffer_5(&mut cx, crc)
         }
@@ -333,15 +333,15 @@ macro_rules! crc_functions_8 {
         fn $f(mut cx: FunctionContext) -> JsResult<JsBuffer> {
             let buffer = cx.argument::<JsBuffer>(0)?;
 
-            let crc = cx.borrow(&buffer, |buffer| {
-                let data = buffer.as_slice();
+            let crc = {
+                let data = buffer.as_slice(&cx);
 
                 let mut crc = CRCu64::$f();
 
                 crc.digest(data);
 
                 crc.get_crc()
-            });
+            };
 
             to_js_buffer_8(&mut cx, crc)
         }
