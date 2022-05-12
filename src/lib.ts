@@ -1,5 +1,6 @@
 /* eslint-disable camelcase */
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const _crc = require("../index.node");
 
 /**

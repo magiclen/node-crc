@@ -1,16 +1,19 @@
 {
   "name": "node-crc",
-  "version": "2.0.12",
+  "version": "2.0.13",
   "description": "To compute CRC values by providing the length of bits, expression, reflection, an initial value and a final xor value. It has many built-in CRC functions.",
   "main": "lib/lib.js",
   "typings": "lib/lib.d.ts",
   "scripts": {
     "test": "mocha -r ts-node/register tests/**/*.test.ts",
-    "build": "cargo-cp-artifact -nc index.node -- cargo build --release --message-format=json-render-diagnostics && tsc",
+    "build": "npm run build:neon && npm run build:ts",
+    "build:neon": "cargo-cp-artifact -nc index.node -- cargo build --release --message-format=json-render-diagnostics",
+    "build:ts": "tsc",
     "build:watch": "tsc -w",
-    "install": "npm run build",
+    "lint": "eslint src tests",
+    "install": "npm run build:neon",
     "prepare": "npm run build",
-    "prepublishOnly": "npm run test"
+    "prepublishOnly": "npm run lint && npm run test"
   },
   "engines": {
     "node": ">=12"
