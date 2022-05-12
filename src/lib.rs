@@ -1,5 +1,3 @@
-extern crate crc_any;
-
 use neon::handle::Managed;
 use neon::prelude::*;
 use neon::types::buffer::TypedArray;
