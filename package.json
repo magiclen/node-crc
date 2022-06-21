@@ -2,7 +2,7 @@
   "name": "node-crc",
   "version": "2.0.13",
   "description": "To compute CRC values by providing the length of bits, expression, reflection, an initial value and a final xor value. It has many built-in CRC functions.",
-  "main": "lib/lib.js",
+  "main": "index.node",
   "typings": "lib/lib.d.ts",
   "scripts": {
     "test": "mocha -r ts-node/register tests/**/*.test.ts",
@@ -11,9 +11,7 @@
     "build:ts": "tsc",
     "build:watch": "tsc -w",
     "lint": "eslint src tests",
-    "install": "npm run build:neon",
-    "prepare": "npm run build",
-    "prepublishOnly": "npm run lint && npm run test"
+    "prepublishOnly": "npm run build && npm run lint && npm run test"
   },
   "engines": {
     "node": ">=12"
@@ -37,14 +35,14 @@
   },
   "homepage": "https://magiclen.org/node-js-crc/",
   "dependencies": {
-    "@types/node": "^17.0.32",
-    "cargo-cp-artifact": "^0.1.6"
+    "@types/node": "^17.0.32"
   },
   "devDependencies": {
     "@types/chai": "^4.3.1",
     "@types/mocha": "^9.1.1",
     "@typescript-eslint/eslint-plugin": "^5.23.0",
     "@typescript-eslint/parser": "^5.23.0",
+    "cargo-cp-artifact": "^0.1.6",
     "chai": "^4.3.6",
     "eslint": "^8.15.0",
     "mocha": "^10.0.0",
