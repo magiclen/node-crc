@@ -7,7 +7,15 @@ To compute CRC values by providing the length of bits, expression, reflection, a
 
 For versions 2.0.0 - 2.0.13 you need to set up the Rust development environment: [rustup](https://rustup.rs/)
 
-Since version 2.0.14 the pre-build binary `index.node` is shipped with every release.
+Since version 2.0.14 pre-build [binaries](./bin) for following platforms can be used:
+
+- macOS x64
+- macOS ARM64
+- Linux x64
+- Linux x86
+- Linux ARM64
+- Windows x64
+- Windows x86
 
 ## Usage
 
@@ -115,9 +123,14 @@ const result = crc.crc32(Buffer.from("hello", "utf8")).toString("hex");
 const result2 = crc.crc64(Buffer.from("world", "utf8")).toString("hex");
 ```
 
+## Pre-Build
+
+To build the binaries, install Docker and Rust-Toolchain and run `./build.sh`.
+
 ## TODO
 
 1. CRC class to compute large data
+2. Build binaries with github actions
 
 ## License
 
