@@ -1,8 +1,7 @@
 import { describe, it } from "mocha";
 import { expect } from "chai";
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const crc = require("../index.node");
+import * as crc from "..";
 
 describe("CRC-8 Family", function () {
     it("should calculate CRC-8(CRC-8-ATM)", function () {
