@@ -1,7 +1,14 @@
 /* eslint-disable camelcase */
 
+/**
+ * Check platform and arch to load correct prebuild binary
+ */
+const arch = process.arch;
+const platform = process.platform;
+const binary = `../bin/${platform}-${arch}.node`;
+
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const _crc = require("../index.node");
+const _crc = require(binary);
 
 /**
  * Create a CRC instance by providing the length of bits, expression, reflection, an initial value and a final xor value.
