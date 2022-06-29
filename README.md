@@ -7,13 +7,13 @@ To compute CRC values by providing the length of bits, expression, reflection, a
 
 For versions 2.0.0 - 2.0.13 you need to set up the Rust development environment: [rustup](https://rustup.rs/)
 
-Since version 2.0.14 pre-build [binaries](./bin) for following platforms can be used:
+Since version 2.0.15 pre-build [binaries](./bin) for following platforms can be used:
 
 - macOS x64
 - macOS ARM64
-- Linux x64
-- Linux x86
-- Linux ARM64
+- Linux x64 (gnu/musl)
+- Linux x86 (gnu/musl)
+- Linux ARM64 (gnu/musl)
 - Windows x64
 - Windows x86
 
@@ -125,7 +125,7 @@ const result2 = crc.crc64(Buffer.from("world", "utf8")).toString("hex");
 
 ## Pre-Build
 
-To build the binaries, install Docker and Rust-Toolchain and run `./build.sh`.
+To build the binaries, install Docker and Rust-Toolchain. Then execute `npm run build:binary`.
 
 ## TODO
 
