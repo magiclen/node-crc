@@ -1,13 +1,30 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable camelcase */
+
+import { familySync, GLIBC, MUSL } from "detect-libc";
+
+/**
+ * Check linux family to select correct libc
+ */
+const getLinuxFamily = () => {
+    switch (familySync()) {
+        case GLIBC:
+            return "-gnu";
+        case MUSL:
+            return "-musl";
+        default:
+            return "";
+    }
+};
 
 /**
  * Check platform and arch to load correct prebuild binary
  */
 const arch = process.arch;
 const platform = process.platform;
-const binary = `../bin/${platform}-${arch}.node`;
+const family = platform === "linux" ? getLinuxFamily() : "";
+const binary = `../bin/${platform}-${arch}${family}.node`;
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const _crc = require(binary);
 
 /**

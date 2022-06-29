@@ -10,7 +10,7 @@
     "build:ts": "tsc",
     "build:watch": "tsc -w",
     "build:neon": "cargo-cp-artifact -nc index.node -- cargo build --release --message-format=json-render-diagnostics",
-    "build:bin": "./build.sh",
+    "build:binary": "./build.sh",
     "build:clean": "rimraf target && rimraf bin && cargo clean && mkdir -p bin",
     "lint": "eslint src tests",
     "prepublishOnly": "npm run build:bin && npm run lint && npm run test"
@@ -37,7 +37,8 @@
   },
   "homepage": "https://magiclen.org/node-js-crc/",
   "dependencies": {
-    "@types/node": "^18.0.0"
+    "@types/node": "^18.0.0",
+    "detect-libc": "^2.0.1"
   },
   "devDependencies": {
     "@types/chai": "^4.3.1",
