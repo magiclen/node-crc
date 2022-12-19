@@ -12,10 +12,8 @@ jobs:
           - macos-latest
           - windows-latest
         node-version:
-          - 12.x
-          - 14.x
-          - 15.x
           - 16.x
+          - 18.x
     name: Use ${{ matrix.node-version }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     steps:

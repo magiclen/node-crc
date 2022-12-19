@@ -16,7 +16,7 @@
 		"prepublishOnly": "npm run build:bin && npm run lint && npm run test"
 	},
 	"engines": {
-		"node": ">=12"
+		"node": ">=16"
 	},
 	"repository": {
 		"type": "git",
