@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - chore: update node-dependencies
 - chore: update prebuild-binaries
 - fix: eslint linebreaks for windows
+- fix: improve actions run logic
 
 ## [2.0.15] - 2022-06-29
 
