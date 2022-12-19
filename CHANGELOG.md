@@ -5,16 +5,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.0] - 2022-12-19
+
+- feat: activate dependabot checks
+- feat: add eslint in ci-automation
+- chore: update github/actions
+- chore: update node-js versions
+- chore: update node-dependencies
+- chore: update prebuild-binaries
+- fix: eslint linebreaks for windows
+- fix: improve actions run logic
+- fix: replace rust toolchain action
+
 ## [2.0.15] - 2022-06-29
 
-- add binaries for linux-musl
-- update cross-build script
+- feat: add binaries for linux-musl
+- chore: update cross-build script
 
 ## [2.0.14] - 2022-06-27
 
-- add pre-build binaries
-- add cross-build script
-- update dependencies
+- feat: add pre-build binaries
+- feat: add cross-build script
+- chore: update node-dependencies
 
 ## [2.0.13] - 2022-05-12
 
