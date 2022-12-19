@@ -1,6 +1,6 @@
 [package]
 name = "node-crc"
-version = "2.0.14"
+version = "2.1.0"
 edition = "2021"
 repository = "https://github.com/magiclen/node-crc"
 homepage = "https://magiclen.org/node-js-crc/"
