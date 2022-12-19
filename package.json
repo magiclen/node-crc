@@ -1,55 +1,55 @@
 {
-  "name": "node-crc",
-  "version": "2.0.15",
-  "description": "To compute CRC values by providing the length of bits, expression, reflection, an initial value and a final xor value. It has many built-in CRC functions.",
-  "main": "lib/lib.js",
-  "typings": "lib/lib.d.ts",
-  "scripts": {
-    "test": "mocha -r ts-node/register tests/**/*.test.ts",
-    "build": "npm run build:ts && npm run build:bin",
-    "build:ts": "tsc",
-    "build:watch": "tsc -w",
-    "build:neon": "cargo-cp-artifact -nc index.node -- cargo build --release --message-format=json-render-diagnostics",
-    "build:binary": "./build.sh",
-    "build:clean": "rimraf target && rimraf bin && cargo clean && mkdir -p bin",
-    "lint": "eslint src tests",
-    "prepublishOnly": "npm run build:bin && npm run lint && npm run test"
-  },
-  "engines": {
-    "node": ">=12"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/magiclen/node-crc.git"
-  },
-  "keywords": [
-    "node.js",
-    "crc",
-    "crc8",
-    "crc16",
-    "crc32",
-    "crc64"
-  ],
-  "author": "Magic Len <len@magiclen.org> (https://magiclen.org)",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/magiclen/node-crc/issues"
-  },
-  "homepage": "https://magiclen.org/node-js-crc/",
-  "dependencies": {
-    "@types/node": "^18.0.0",
-    "detect-libc": "^2.0.1"
-  },
-  "devDependencies": {
-    "@types/chai": "^4.3.1",
-    "@types/mocha": "^9.1.1",
-    "@typescript-eslint/eslint-plugin": "^5.29.0",
-    "@typescript-eslint/parser": "^5.29.0",
-    "cargo-cp-artifact": "^0.1.6",
-    "chai": "^4.3.6",
-    "eslint": "^8.18.0",
-    "mocha": "^10.0.0",
-    "ts-node": "^10.8.1",
-    "typescript": "^4.7.4"
-  }
+	"name": "node-crc",
+	"version": "2.0.15",
+	"description": "To compute CRC values by providing the length of bits, expression, reflection, an initial value and a final xor value. It has many built-in CRC functions.",
+	"main": "lib/lib.js",
+	"typings": "lib/lib.d.ts",
+	"scripts": {
+		"test": "mocha -r ts-node/register tests/**/*.test.ts",
+		"build": "npm run build:ts && npm run build:bin",
+		"build:ts": "tsc",
+		"build:watch": "tsc -w",
+		"build:neon": "cargo-cp-artifact -nc index.node -- cargo build --release --message-format=json-render-diagnostics",
+		"build:binary": "./build.sh",
+		"build:clean": "rimraf target && rimraf bin && cargo clean && mkdir -p bin",
+		"lint": "eslint src tests",
+		"prepublishOnly": "npm run build:bin && npm run lint && npm run test"
+	},
+	"engines": {
+		"node": ">=12"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/magiclen/node-crc.git"
+	},
+	"keywords": [
+		"node.js",
+		"crc",
+		"crc8",
+		"crc16",
+		"crc32",
+		"crc64"
+	],
+	"author": "Magic Len <len@magiclen.org> (https://magiclen.org)",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/magiclen/node-crc/issues"
+	},
+	"homepage": "https://magiclen.org/node-js-crc/",
+	"dependencies": {
+		"@types/node": "^18.0.0",
+		"detect-libc": "^2.0.1"
+	},
+	"devDependencies": {
+		"@types/chai": "^4.3.1",
+		"@types/mocha": "^9.1.1",
+		"@typescript-eslint/eslint-plugin": "^5.29.0",
+		"@typescript-eslint/parser": "^5.29.0",
+		"cargo-cp-artifact": "^0.1.6",
+		"chai": "^4.3.6",
+		"eslint": "^8.18.0",
+		"mocha": "^10.0.0",
+		"ts-node": "^10.8.1",
+		"typescript": "^4.7.4"
+	}
 }
