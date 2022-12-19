@@ -5,14 +5,15 @@
 	"main": "lib/lib.js",
 	"typings": "lib/lib.d.ts",
 	"scripts": {
-		"test": "mocha -r ts-node/register tests/**/*.test.ts",
-		"build": "npm run build:ts && npm run build:bin",
+		"build": "npm run build:ts && npm run build:neon",
 		"build:ts": "tsc",
 		"build:watch": "tsc -w",
 		"build:neon": "cargo-cp-artifact -nc index.node -- cargo build --release --message-format=json-render-diagnostics",
-		"build:binary": "./build.sh",
+		"build:bin": "./build.sh",
 		"build:clean": "rimraf target && rimraf bin && cargo clean && mkdir -p bin",
 		"lint": "eslint src tests",
+		"test": "mocha -r ts-node/register tests/**/*.test.ts",
+		"check": "npm run lint && npm run test",
 		"prepublishOnly": "npm run build:bin && npm run lint && npm run test"
 	},
 	"engines": {
