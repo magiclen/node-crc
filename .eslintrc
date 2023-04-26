@@ -4,13 +4,18 @@
     "@typescript-eslint"
   ],
   "env": {
-    "browser": true,
-    "node": true
+    "es2022": true,
+    "node": true,
+    "browser": true
+  },
+  "parserOptions": {
+    "project": "./tsconfig.json"
   },
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/eslint-recommended",
-    "plugin:@typescript-eslint/recommended"
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking"
   ],
   "rules": {
     "@typescript-eslint/no-var-requires": "warn",
@@ -28,6 +33,17 @@
     "array-element-newline": [
       "error",
       "consistent"
+    ],
+    "arrow-parens": [
+      "error",
+      "always"
+    ],
+    "arrow-spacing": [
+      "error",
+      {
+        "before": true,
+        "after": true
+      }
     ],
     "block-spacing": [
       "error",
@@ -66,6 +82,10 @@
       "error",
       "self"
     ],
+    "dot-location": [
+      "error",
+      "property"
+    ],
     "eol-last": [
       "error",
       "always"
@@ -84,8 +104,13 @@
     ],
     "function-paren-newline": [
       "error",
+      "multiline-arguments"
+    ],
+    "generator-star-spacing": [
+      "error",
       {
-        "minItems": 4
+        "before": false,
+        "after": true
       }
     ],
     "implicit-arrow-linebreak": [
@@ -117,13 +142,28 @@
         "after": true
       }
     ],
+    "line-comment-position": [
+      "off"
+    ],
     "linebreak-style": [
       "error",
       "unix"
     ],
+    "lines-around-comment": [
+      "off"
+    ],
     "lines-between-class-members": [
       "error",
       "always"
+    ],
+    "max-len": [
+      "off"
+    ],
+    "max-statements-per-line": [
+      "error",
+      {
+        "max": 1
+      }
     ],
     "multiline-ternary": [
       "error",
@@ -141,16 +181,31 @@
       "error",
       "always"
     ],
+    "newline-per-chained-call": [
+      "error",
+      {
+        "ignoreChainWithDepth": 3
+      }
+    ],
     "no-array-constructor": [
       "error"
     ],
+    "no-extra-parens": [
+      "error"
+    ],
     "no-lonely-if": [
+      "error"
+    ],
+    "no-mixed-spaces-and-tabs": [
       "error"
     ],
     "no-mixed-operators": [
       "error"
     ],
     "no-multi-assign": [
+      "error"
+    ],
+    "no-multi-spaces": [
       "error"
     ],
     "no-multiple-empty-lines": [
@@ -228,6 +283,9 @@
       "error",
       "never"
     ],
+    "padding-line-between-statements": [
+      "off"
+    ],
     "prefer-exponentiation-operator": [
       "error"
     ],
@@ -241,6 +299,10 @@
     "quotes": [
       "error",
       "double"
+    ],
+    "rest-spread-spacing": [
+      "error",
+      "never"
     ],
     "semi": [
       "error",
@@ -297,6 +359,10 @@
         "before": false
       }
     ],
+    "template-curly-spacing": [
+      "error",
+      "never"
+    ],
     "template-tag-spacing": [
       "error",
       "never"
@@ -305,8 +371,16 @@
       "error",
       "never"
     ],
+    "wrap-iife": [
+      "error",
+      "outside"
+    ],
     "wrap-regex": [
       "error"
+    ],
+    "yield-star-spacing": [
+      "error",
+      "after"
     ]
   }
 }

@@ -1,22 +1,33 @@
 {
   "name": "node-crc",
-  "version": "2.0.13",
+  "version": "3.0.0",
   "description": "To compute CRC values by providing the length of bits, expression, reflection, an initial value and a final xor value. It has many built-in CRC functions.",
-  "main": "lib/lib.js",
-  "typings": "lib/lib.d.ts",
-  "scripts": {
-    "test": "mocha -r ts-node/register tests/**/*.test.ts",
-    "build": "npm run build:neon && npm run build:ts",
-    "build:neon": "cargo-cp-artifact -nc index.node -- cargo build --release --message-format=json-render-diagnostics",
-    "build:ts": "tsc",
-    "build:watch": "tsc -w",
-    "lint": "eslint src tests",
-    "install": "npm run build:neon",
-    "prepare": "npm run build",
-    "prepublishOnly": "npm run lint && npm run test"
-  },
+  "type": "module",
+  "exports": "./lib/lib.js",
+  "types": "./lib/lib.d.ts",
   "engines": {
-    "node": ">=12"
+    "node": ">=16"
+  },
+  "files": [
+    "lib",
+    "src",
+    "build.js",
+    "build.rs",
+    "Cargo.toml"
+  ],
+  "scripts": {
+    "test": "node --experimental-specifier-resolution=node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "test:coverage": "node --experimental-specifier-resolution=node --experimental-vm-modules  node_modules/jest/bin/jest.js --coverage",
+    "test:inspect-brk": "node --experimental-specifier-resolution=node --experimental-vm-modules --inspect-brk=0.0.0.0:9230 node_modules/jest/bin/jest.js --testTimeout 0 --runInBand",
+    "clean": "rimraf lib",
+    "install": "napi build --release --platform --js index.cjs --dts index.d.cts && node build.js",
+    "build": "npm run clean && npm run install && tsc -p tsconfig.build.json",
+    "build:watch": "npm run build -- -w",
+    "lint": "eslint src tests",
+    "lint:fix": "npm run lint -- --fix",
+    "prepare": "git config core.hooksPath .githooks || exit 0",
+    "prepack": "npm run build",
+    "prepublishOnly": "npm run lint && npm run test"
   },
   "repository": {
     "type": "git",
@@ -36,19 +47,18 @@
     "url": "https://github.com/magiclen/node-crc/issues"
   },
   "homepage": "https://magiclen.org/node-js-crc/",
-  "dependencies": {
-    "@types/node": "^17.0.32",
-    "cargo-cp-artifact": "^0.1.6"
-  },
   "devDependencies": {
-    "@types/chai": "^4.3.1",
-    "@types/mocha": "^9.1.1",
-    "@typescript-eslint/eslint-plugin": "^5.23.0",
-    "@typescript-eslint/parser": "^5.23.0",
-    "chai": "^4.3.6",
-    "eslint": "^8.15.0",
-    "mocha": "^10.0.0",
-    "ts-node": "^10.7.0",
-    "typescript": "^4.6.4"
+    "@types/jest": "^29.5.1",
+    "@typescript-eslint/eslint-plugin": "^5.59.1",
+    "@typescript-eslint/parser": "^5.59.1",
+    "eslint": "^8.39.0",
+    "jest": "^29.5.0",
+    "rimraf": "^5.0.0",
+    "ts-jest": "^29.1.0",
+    "typescript": "^5.0.4"
+  },
+  "dependencies": {
+    "@napi-rs/cli": "^2.15.2",
+    "@types/node": "^18.16.1"
   }
 }

@@ -3,10 +3,15 @@
     "configurations": [
         {
             "type": "node-terminal",
-            "name": "Dev",
+            "name": "test",
             "request": "launch",
-            "command": "npm run dev",
-            "cwd": "${workspaceFolder}"
+            "command": "npm test"
+        },
+        {
+            "type": "node",
+            "name": "test:inspect-brk",
+            "request": "attach",
+            "port": 9230
         }
     ]
 }
