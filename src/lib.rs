@@ -525,6 +525,7 @@ fn u32_2_u64(low: u32, high: u32) -> u64 {
     ((high as u64) << 32) | (low as u64)
 }
 
+#[allow(clippy::too_many_arguments)]
 /// Create a CRC instance by providing the length of bits, expression, reflection, an initial value and a final xor value.
 #[napi]
 pub fn crc(
