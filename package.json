@@ -41,7 +41,7 @@
     "crc32",
     "crc64"
   ],
-  "author": "Magic Len <len@magiclen.org> (https://magiclen.org)",
+  "author": "Magic Len",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/magiclen/node-crc/issues"
