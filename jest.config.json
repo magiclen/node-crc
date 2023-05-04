@@ -9,5 +9,8 @@
                 "useESM": true
             }
         ]
+    },
+    "moduleNameMapper": {
+        "^(.+)\\.jsx?$": "$1"
     }
 }

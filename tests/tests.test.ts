@@ -14,7 +14,7 @@ import {
     crc64iso,
     crc64we,
     crc64jones,
-} from "../src/lib";
+} from "../src/lib.js";
 
 describe("CRC-8 Family", function () {
     it("should calculate CRC-8(CRC-8-ATM)", function () {

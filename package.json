@@ -1,6 +1,6 @@
 {
   "name": "node-crc",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "To compute CRC values by providing the length of bits, expression, reflection, an initial value and a final xor value. It has many built-in CRC functions.",
   "type": "module",
   "exports": "./lib/lib.js",
