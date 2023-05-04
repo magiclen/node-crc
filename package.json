@@ -16,9 +16,9 @@
     "Cargo.toml"
   ],
   "scripts": {
-    "test": "node --experimental-specifier-resolution=node --experimental-vm-modules node_modules/jest/bin/jest.js",
-    "test:coverage": "node --experimental-specifier-resolution=node --experimental-vm-modules  node_modules/jest/bin/jest.js --coverage",
-    "test:inspect-brk": "node --experimental-specifier-resolution=node --experimental-vm-modules --inspect-brk=0.0.0.0:9230 node_modules/jest/bin/jest.js --testTimeout 0 --runInBand",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+    "test:coverage": "node --experimental-vm-modules  node_modules/jest/bin/jest.js --coverage",
+    "test:inspect-brk": "node --experimental-vm-modules --inspect-brk=0.0.0.0:9230 node_modules/jest/bin/jest.js --testTimeout 0 --runInBand",
     "clean": "rimraf lib",
     "install": "napi build --release --platform --js index.cjs --dts index.d.cts && node build.js",
     "build": "npm run clean && npm run install && tsc -p tsconfig.build.json",
