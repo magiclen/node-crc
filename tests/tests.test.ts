@@ -1,19 +1,19 @@
 /* eslint-disable camelcase */
 
 import {
-    crc8,
-    crc8cdma2000,
+    crc,
     crc16,
     crc16ccitt_false,
     crc24,
-    crc,
     crc32,
-    crc32mhash,
     crc32c,
+    crc32mhash,
     crc64,
     crc64iso,
-    crc64we,
     crc64jones,
+    crc64we,
+    crc8,
+    crc8cdma2000,
 } from "../src/lib.js";
 
 describe("CRC-8 Family", function () {
