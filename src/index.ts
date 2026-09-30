@@ -1,4 +1,5 @@
 export {
+    CRC,
     crc,
     crc3gsm,
     crc4interlaken,
@@ -85,3 +86,4 @@ export {
     crc64we,
     crc_a,
 } from "../native/index.cjs";
+export type { CrcOptions } from "../native/index.cjs";

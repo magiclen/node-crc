@@ -3,6 +3,7 @@ import { Buffer } from "node:buffer";
 import { describe, it } from "node:test";
 
 import {
+    CRC,
     crc,
     crc3gsm,
     crc4interlaken,
@@ -117,14 +118,7 @@ describe("CRC-24 Family", () => {
 
     it("should calculate CRC-24 (using poly)", () => {
         const result = crc(
-            0x00864cfb,
-            0x00000000,
-            24,
-            0x00b704ce,
-            0x00000000,
-            0x00000000,
-            0x00000000,
-            false,
+            { bits: 24, poly: 0x864cfb, initial: 0xb704ce },
             Buffer.from("hello", "utf8"),
         );
         assert.equal(result.toString("hex"), "47f58a");
@@ -262,4 +256,75 @@ describe("Check values", () => {
             assert.equal(f(data).toString("hex"), check);
         });
     }
+});
+
+describe("Uint8Array input", () => {
+    it("accepts a plain Uint8Array, not only a Buffer", () => {
+        const data = new TextEncoder().encode("hello");
+        assert.equal(crc32(data).toString("hex"), "3610a686");
+        assert.equal(
+            crc({ bits: 24, poly: 0x864cfb, initial: 0xb704ce }, data).toString("hex"),
+            "47f58a",
+        );
+    });
+});
+
+describe("Custom CRC", () => {
+    const data = Buffer.from("123456789", "utf8");
+
+    it("matches the built-in CRC-32 when the polynomial is reflected", () => {
+        const result = crc(
+            {
+                bits: 32,
+                poly: 0xedb88320,
+                initial: 0xffffffff,
+                finalXor: 0xffffffff,
+                reflect: true,
+            },
+            data,
+        );
+        assert.deepEqual(result, crc32(data));
+    });
+
+    it("matches the built-in CRC-64 when the values are bigints", () => {
+        const result = crc(
+            { bits: 64, poly: 0x42f0e1eba9ea3693n, initial: 0n, finalXor: 0n },
+            data,
+        );
+        assert.deepEqual(result, crc64(data));
+    });
+
+    it("matches the built-in CRC-12 whose width is not a multiple of 8", () => {
+        const result = crc({ bits: 12, poly: 0x80f }, data);
+        assert.deepEqual(result, crc12(data));
+    });
+
+    it("rejects bits outside 1 to 64 instead of crashing the process", () => {
+        assert.throws(() => crc({ bits: 0, poly: 0x7 }, data), /`bits` must be between 1 and 64/);
+        assert.throws(() => crc({ bits: 65, poly: 0x7 }, data), /`bits` must be between 1 and 64/);
+    });
+});
+
+describe("CRC class", () => {
+    const data = Buffer.from("123456789", "utf8");
+
+    it("computes the same value when data is updated chunk by chunk", () => {
+        const c = CRC.crc32();
+        c.update(data.subarray(0, 4)).update(data.subarray(4));
+        assert.deepEqual(c.digest(), crc32(data));
+    });
+
+    it("can get the value many times and reset to the initial state", () => {
+        const c = CRC.crc16();
+        c.update(data);
+        assert.deepEqual(c.digest(), c.digest());
+        c.reset().update(data);
+        assert.deepEqual(c.digest(), crc16(data));
+    });
+
+    it("computes a custom CRC", () => {
+        const c = new CRC({ bits: 24, poly: 0x864cfb, initial: 0xb704ce });
+        c.update(Buffer.from("he", "utf8")).update(Buffer.from("llo", "utf8"));
+        assert.equal(c.digest().toString("hex"), "47f58a");
+    });
 });

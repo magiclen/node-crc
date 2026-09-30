@@ -1,9 +1,12 @@
 use crc_any::{CRC, CRCu8, CRCu16, CRCu32, CRCu64};
 use napi::{
-    Env, Result,
-    bindgen_prelude::{BufferSlice, Uint8ArraySlice},
+    Either, Env, Error, Result, Status,
+    bindgen_prelude::{BigInt, BufferSlice, This, Uint8ArraySlice},
 };
 use napi_derive::napi;
+
+/// The largest integer that a JavaScript number can represent exactly.
+const MAX_SAFE_INTEGER: f64 = 9_007_199_254_740_991.0;
 
 /// Copies the lowest `len` bytes of a CRC value into a new big-endian buffer.
 #[inline]
@@ -11,6 +14,98 @@ fn to_buffer(env: &Env, crc: impl Into<u64>, len: usize) -> Result<BufferSlice<'
     BufferSlice::copy_from(env, &crc.into().to_be_bytes()[(8 - len)..])
 }
 
+/// Converts a JavaScript number or bigint to a `u64` value.
+fn to_u64(value: Either<f64, BigInt>, name: &str) -> Result<u64> {
+    let value = match value {
+        Either::A(n) => {
+            (n.fract() == 0.0 && (0.0..=MAX_SAFE_INTEGER).contains(&n)).then_some(n as u64)
+        },
+        Either::B(n) => match n.get_u64() {
+            (false, n, true) => Some(n),
+            _ => None,
+        },
+    };
+
+    value.ok_or_else(|| {
+        Error::new(
+            Status::InvalidArg,
+            format!(
+                "`{name}` must be an integer between 0 and 2^64 - 1 (use a bigint if it is larger \
+                 than Number.MAX_SAFE_INTEGER)"
+            ),
+        )
+    })
+}
+
+/// The parameters of a custom CRC.
+#[napi(object)]
+pub struct CrcOptions {
+    /// The width of the CRC in bits. It must be between `1` and `64`.
+    pub bits:      u32,
+    /// The polynomial. When `reflect` is `true`, pass the reversed polynomial (for example, `0xEDB88320` for CRC-32).
+    pub poly:      Either<f64, BigInt>,
+    /// The initial value. Pass it as it is listed in CRC catalogs, even when `reflect` is `true`. The default value is `0`.
+    pub initial:   Option<Either<f64, BigInt>>,
+    /// The value to XOR with the final result. The default value is `0`.
+    pub final_xor: Option<Either<f64, BigInt>>,
+    /// Whether to reflect both the input bytes and the final result. The default value is `false`.
+    pub reflect:   Option<bool>,
+}
+
+/// A CRC calculator which can be updated many times, so large data can be computed chunk by chunk.
+#[napi(js_name = "CRC")]
+pub struct Crc {
+    inner: CRC,
+    /// The length of the CRC value in bytes.
+    len:   usize,
+}
+
+#[napi]
+impl Crc {
+    /// Create a CRC calculator by providing the length of bits, expression, reflection, an initial value and a final xor value.
+    #[napi(constructor)]
+    pub fn new(options: CrcOptions) -> Result<Self> {
+        // `CRC::create_crc` panics if `bits` is larger than 64, and a panic here would abort the Node.js process.
+        let bits = match u8::try_from(options.bits) {
+            Ok(bits @ 1..=64) => bits,
+            _ => return Err(Error::new(Status::InvalidArg, "`bits` must be between 1 and 64")),
+        };
+
+        let poly = to_u64(options.poly, "poly")?;
+        let initial = options.initial.map_or(Ok(0), |v| to_u64(v, "initial"))?;
+        let final_xor = options.final_xor.map_or(Ok(0), |v| to_u64(v, "finalXor"))?;
+        let reflect = options.reflect.unwrap_or(false);
+
+        Ok(Self {
+            inner: CRC::create_crc(poly, bits, initial, final_xor, reflect),
+            len:   usize::from(bits).div_ceil(8),
+        })
+    }
+
+    /// Update the CRC with data. It returns this calculator, so calls can be chained.
+    #[napi]
+    pub fn update<'env>(&mut self, this: This<'env>, data: Uint8ArraySlice<'_>) -> This<'env> {
+        self.inner.update(&data);
+
+        this
+    }
+
+    /// Get the current CRC value as a big-endian buffer. You can continue calling `update` even after getting a CRC value.
+    #[napi]
+    pub fn digest<'env>(&self, env: &'env Env) -> Result<BufferSlice<'env>> {
+        to_buffer(env, self.inner.get_crc(), self.len)
+    }
+
+    /// Reset the CRC to its initial state. It returns this calculator, so calls can be chained.
+    #[napi]
+    pub fn reset<'env>(&mut self, this: This<'env>) -> This<'env> {
+        self.inner.reset();
+
+        this
+    }
+}
+
+/// Each built-in CRC gets a function which computes the CRC of data at once, and a static factory method of the `CRC` class.
 macro_rules! crc_functions {
     ($t:ident, $len:literal; $($(#[$attr:meta])* $f:ident),+ $(,)?) => {
         $(
@@ -22,6 +117,17 @@ macro_rules! crc_functions {
                 crc.update(&data);
 
                 to_buffer(env, crc.get_crc(), $len)
+            }
+
+            #[napi]
+            impl Crc {
+                $(#[$attr])*
+                #[napi(factory, js_name = $f)]
+                pub fn $f() -> Self {
+                    Self {
+                        inner: CRC::$f(), len: $len
+                    }
+                }
             }
         )+
     };
@@ -395,33 +501,16 @@ pub fn crc16tms13157<'env>(env: &'env Env, data: Uint8ArraySlice<'_>) -> Result<
     crc16tms37157(env, data)
 }
 
-#[inline]
-fn u32_2_u64(low: u32, high: u32) -> u64 {
-    ((high as u64) << 32) | (low as u64)
-}
-
-#[allow(clippy::too_many_arguments)]
-/// Create a CRC instance by providing the length of bits, expression, reflection, an initial value and a final xor value.
+/// Compute a CRC value by providing the length of bits, expression, reflection, an initial value and a final xor value.
 #[napi]
 pub fn crc<'env>(
     env: &'env Env,
-    poly_low: u32,
-    poly_high: u32,
-    bit: u8,
-    initial_low: u32,
-    initial_high: u32,
-    final_xor_low: u32,
-    final_xor_high: u32,
-    reflect: bool,
+    options: CrcOptions,
     data: Uint8ArraySlice<'_>,
 ) -> Result<BufferSlice<'env>> {
-    let poly = u32_2_u64(poly_low, poly_high);
-    let initial = u32_2_u64(initial_low, initial_high);
-    let final_xor = u32_2_u64(final_xor_low, final_xor_high);
+    let mut crc = Crc::new(options)?;
 
-    let mut crc = CRC::create_crc(poly, bit, initial, final_xor, reflect);
+    crc.inner.update(&data);
 
-    crc.update(&data);
-
-    to_buffer(env, crc.get_crc(), usize::from(bit).div_ceil(8))
+    crc.digest(env)
 }
