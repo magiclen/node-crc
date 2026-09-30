@@ -1,3 +1,3 @@
-#!/bin/bash
+#!/bin/sh
 
-npm run lint
+npm run check

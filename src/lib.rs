@@ -1,176 +1,34 @@
-use crc_any::{CRCu16, CRCu32, CRCu64, CRCu8, CRC};
-use napi::bindgen_prelude::*;
+use crc_any::{CRC, CRCu8, CRCu16, CRCu32, CRCu64};
+use napi::{
+    Env, Result,
+    bindgen_prelude::{BufferSlice, Uint8ArraySlice},
+};
 use napi_derive::napi;
 
+/// Copies the lowest `len` bytes of a CRC value into a new big-endian buffer.
 #[inline]
-fn to_buffer_1(u: u8) -> Buffer {
-    Buffer::from(vec![u])
+fn to_buffer(env: &Env, crc: impl Into<u64>, len: usize) -> Result<BufferSlice<'_>> {
+    BufferSlice::copy_from(env, &crc.into().to_be_bytes()[(8 - len)..])
 }
 
-#[inline]
-fn to_buffer_2(u: u16) -> Buffer {
-    Buffer::from(u.to_be_bytes().to_vec())
-}
-
-#[inline]
-fn to_buffer_3(u: u32) -> Buffer {
-    Buffer::from(u.to_be_bytes()[1..].to_vec())
-}
-
-#[inline]
-fn to_buffer_4(u: u32) -> Buffer {
-    Buffer::from(u.to_be_bytes().to_vec())
-}
-
-#[inline]
-fn to_buffer_5(u: u64) -> Buffer {
-    Buffer::from(u.to_be_bytes()[3..].to_vec())
-}
-
-#[inline]
-fn to_buffer_8(u: u64) -> Buffer {
-    Buffer::from(u.to_be_bytes().to_vec())
-}
-
-macro_rules! crc_functions_1 {
-    (@inner $(#[$attr:meta])* $f:ident) => {
-        $(#[$attr])*
-        #[napi(js_name = $f)]
-        pub fn $f(data: Buffer) -> Buffer {
-                let crc = {
-                    let mut crc = CRCu8::$f();
-
-                    crc.digest(data.as_ref());
-
-                    crc.get_crc()
-                };
-
-                to_buffer_1(crc)
-        }
-    };
-    ($($(#[$attr:meta])* $f:ident),+ $(,)* ) => {
+macro_rules! crc_functions {
+    ($t:ident, $len:literal; $($(#[$attr:meta])* $f:ident),+ $(,)?) => {
         $(
-            crc_functions_1!(@inner $(#[$attr])* $f);
+            $(#[$attr])*
+            #[napi(js_name = $f)]
+            pub fn $f<'env>(env: &'env Env, data: Uint8ArraySlice<'_>) -> Result<BufferSlice<'env>> {
+                let mut crc = $t::$f();
+
+                crc.update(&data);
+
+                to_buffer(env, crc.get_crc(), $len)
+            }
         )+
     };
 }
 
-macro_rules! crc_functions_2 {
-    (@inner $(#[$attr:meta])* $f:ident) => {
-        $(#[$attr])*
-        #[napi(js_name = $f)]
-        pub fn $f(data: Buffer) -> Buffer {
-                let crc = {
-                    let mut crc = CRCu16::$f();
-
-                    crc.digest(data.as_ref());
-
-                    crc.get_crc()
-                };
-
-                to_buffer_2(crc)
-        }
-    };
-    ($($(#[$attr:meta])* $f:ident),+ $(,)* ) => {
-        $(
-            crc_functions_2!(@inner $(#[$attr])* $f);
-        )+
-    };
-}
-
-macro_rules! crc_functions_3 {
-    (@inner $(#[$attr:meta])* $f:ident) => {
-        $(#[$attr])*
-        #[napi(js_name = $f)]
-        pub fn $f(data: Buffer) -> Buffer {
-                let crc = {
-                    let mut crc = CRCu32::$f();
-
-                    crc.digest(data.as_ref());
-
-                    crc.get_crc()
-                };
-
-                to_buffer_3(crc)
-        }
-    };
-    ($($(#[$attr:meta])* $f:ident),+ $(,)* ) => {
-        $(
-            crc_functions_3!(@inner $(#[$attr])* $f);
-        )+
-    };
-}
-
-macro_rules! crc_functions_4 {
-    (@inner $(#[$attr:meta])* $f:ident) => {
-        $(#[$attr])*
-        #[napi(js_name = $f)]
-        pub fn $f(data: Buffer) -> Buffer {
-                let crc = {
-                    let mut crc = CRCu32::$f();
-
-                    crc.digest(data.as_ref());
-
-                    crc.get_crc()
-                };
-
-                to_buffer_4(crc)
-        }
-    };
-    ($($(#[$attr:meta])* $f:ident),+ $(,)* ) => {
-        $(
-            crc_functions_4!(@inner $(#[$attr])* $f);
-        )+
-    };
-}
-
-macro_rules! crc_functions_5 {
-    (@inner $(#[$attr:meta])* $f:ident) => {
-        $(#[$attr])*
-        #[napi(js_name = $f)]
-        pub fn $f(data: Buffer) -> Buffer {
-                let crc = {
-                    let mut crc = CRCu64::$f();
-
-                    crc.digest(data.as_ref());
-
-                    crc.get_crc()
-                };
-
-                to_buffer_5(crc)
-        }
-    };
-    ($($(#[$attr:meta])* $f:ident),+ $(,)* ) => {
-        $(
-            crc_functions_5!(@inner $(#[$attr])* $f);
-        )+
-    };
-}
-
-macro_rules! crc_functions_8 {
-    (@inner $(#[$attr:meta])* $f:ident) => {
-        $(#[$attr])*
-        #[napi(js_name = $f)]
-        pub fn $f(data: Buffer) -> Buffer {
-                let crc = {
-                    let mut crc = CRCu64::$f();
-
-                    crc.digest(data.as_ref());
-
-                    crc.get_crc()
-                };
-
-                to_buffer_8(crc)
-        }
-    };
-    ($($(#[$attr:meta])* $f:ident),+ $(,)* ) => {
-        $(
-            crc_functions_8!(@inner $(#[$attr])* $f);
-        )+
-    };
-}
-
-crc_functions_1!(
+crc_functions!(
+    CRCu8, 1;
     /// |Check|Poly|Init|Ref|XorOut|
     /// |---|---|---|---|---|
     /// |0x4|0x3|0x0|false|0x7|
@@ -265,7 +123,8 @@ crc_functions_1!(
     crc8wcdma,
 );
 
-crc_functions_2!(
+crc_functions!(
+    CRCu16, 2;
     /// |Check|Poly|Init|Ref|XorOut|
     /// |---|---|---|---|---|
     /// |0x199|0x233|0x000|false|0x000|
@@ -284,15 +143,15 @@ crc_functions_2!(
     crc11,
     /// |Check|Poly|Init|Ref|XorOut|
     /// |---|---|---|---|---|
-    /// |0xF5B|0x80F|0x000|false|0x000|
+    /// |0xF5B|0x080F|0x0000|false|0x0000|
     crc12,
     /// |Check|Poly|Init|Ref|XorOut|
     /// |---|---|---|---|---|
-    /// |0xD4D|0xF13|0xFFF|false|0x000|
+    /// |0xD4D|0x0F13|0x0FFF|false|0x0000|
     crc12cdma2000,
     /// |Check|Poly|Init|Ref|XorOut|
     /// |---|---|---|---|---|
-    /// |0xB34|0xD31|0x000|false|0xFFF|
+    /// |0xB34|0x0D31|0x0000|false|0x0FFF|
     crc12gsm,
     /// |Check|Poly|Init|Ref|XorOut|
     /// |---|---|---|---|---|
@@ -360,7 +219,7 @@ crc_functions_2!(
     crc16genibus,
     /// |Check|Poly|Init|Ref|XorOut|
     /// |---|---|---|---|---|
-    /// |0x44C2|0x8005 (rev: 0xA001)|0xFFFF|true|0xFFFF|
+    /// |0x44C2|0x8005 (rev: 0xA001)|0x0000|true|0xFFFF|
     crc16maxim,
     /// |Check|Poly|Init|Ref|XorOut|
     /// |---|---|---|---|---|
@@ -381,7 +240,7 @@ crc_functions_2!(
     /// |Check|Poly|Init|Ref|XorOut|
     /// |---|---|---|---|---|
     /// |0x26B1|0x1021 (rev: 0x8408)|0x89EC|true|0x0000|
-    crc16tms13157,
+    crc16tms37157,
     /// |Check|Poly|Init|Ref|XorOut|
     /// |---|---|---|---|---|
     /// |0xB4C8|0x8005 (rev: 0xA001)|0xFFFF|true|0xFFFF|
@@ -400,7 +259,7 @@ crc_functions_2!(
     crc16modbus,
     /// |Check|Poly|Init|Ref|XorOut|
     /// |---|---|---|---|---|
-    /// |0x906E|0x8005 (rev: 0xA001)|0xFFFF|true|0xFFFF|
+    /// |0x906E|0x1021 (rev: 0x8408)|0xFFFF|true|0xFFFF|
     crc16_x25,
     /// |Check|Poly|Init|Ref|XorOut|
     /// |---|---|---|---|---|
@@ -408,7 +267,8 @@ crc_functions_2!(
     crc16xmodem,
 );
 
-crc_functions_3!(
+crc_functions!(
+    CRCu32, 3;
     /// |Check|Poly|Init|Ref|XorOut|
     /// |---|---|---|---|---|
     /// |0x04F03|0x1685B|0x00000|false|0x00000|
@@ -447,7 +307,8 @@ crc_functions_3!(
     crc24os9,
 );
 
-crc_functions_4!(
+crc_functions!(
+    CRCu32, 4;
     /// |Check|Poly|Init|Ref|XorOut|
     /// |---|---|---|---|---|
     /// |0x04C34ABF|0x2030B9C7|0x3FFFFFFF|false|0x3FFFFFFF|
@@ -459,6 +320,8 @@ crc_functions_4!(
     /// |Check|Poly|Init|Ref|XorOut|
     /// |---|---|---|---|---|
     /// |0x181989FC|0x04C11DB7|0xFFFFFFFF|false|0xFFFFFFFF|
+    ///
+    /// **Output will be reversed by bytes.**
     crc32mhash,
     /// |Check|Poly|Init|Ref|XorOut|
     /// |---|---|---|---|---|
@@ -494,14 +357,16 @@ crc_functions_4!(
     crc32xfer,
 );
 
-crc_functions_5!(
+crc_functions!(
+    CRCu64, 5;
     /// |Check|Poly|Init|Ref|XorOut|
     /// |---|---|---|---|---|
     /// |0xD4164FC646|0x0004820009|0x0000000000|false|0xFFFFFFFFFF|
     crc40gsm,
 );
 
-crc_functions_8!(
+crc_functions!(
+    CRCu64, 8;
     /// |Check|Poly|Init|Ref|XorOut|
     /// |---|---|---|---|---|
     /// |0x6C40DF5F0B497347|0x42F0E1EBA9EA3693|0x0000000000000000|false|0x0000000000000000|
@@ -517,8 +382,18 @@ crc_functions_8!(
     /// |Check|Poly|Init|Ref|XorOut|
     /// |---|---|---|---|---|
     /// |0xE9C6D914C4B8D9CA|0xAD93D23594C935A9 (rev: 0x95AC9329AC4BC9B5)|0x0000000000000000|true|0x0000000000000000|
+    ///
+    /// This is CRC-64/REDIS, which uses the Jones polynomial with an initial value of zero.
     crc64jones,
 );
+
+/// This is the same as `crc16tms37157`. The old name has a typo.
+///
+/// @deprecated Use `crc16tms37157` instead.
+#[napi(js_name = "crc16tms13157")]
+pub fn crc16tms13157<'env>(env: &'env Env, data: Uint8ArraySlice<'_>) -> Result<BufferSlice<'env>> {
+    crc16tms37157(env, data)
+}
 
 #[inline]
 fn u32_2_u64(low: u32, high: u32) -> u64 {
@@ -528,7 +403,8 @@ fn u32_2_u64(low: u32, high: u32) -> u64 {
 #[allow(clippy::too_many_arguments)]
 /// Create a CRC instance by providing the length of bits, expression, reflection, an initial value and a final xor value.
 #[napi]
-pub fn crc(
+pub fn crc<'env>(
+    env: &'env Env,
     poly_low: u32,
     poly_high: u32,
     bit: u8,
@@ -537,19 +413,15 @@ pub fn crc(
     final_xor_low: u32,
     final_xor_high: u32,
     reflect: bool,
-    data: Buffer,
-) -> Buffer {
+    data: Uint8ArraySlice<'_>,
+) -> Result<BufferSlice<'env>> {
     let poly = u32_2_u64(poly_low, poly_high);
     let initial = u32_2_u64(initial_low, initial_high);
     let final_xor = u32_2_u64(final_xor_low, final_xor_high);
 
-    let crc = {
-        let mut crc = CRC::create_crc(poly, bit, initial, final_xor, reflect);
+    let mut crc = CRC::create_crc(poly, bit, initial, final_xor, reflect);
 
-        crc.digest(data.as_ref());
+    crc.update(&data);
 
-        crc.get_crc_heapless_vec_be()
-    };
-
-    Buffer::from(crc.to_vec())
+    to_buffer(env, crc.get_crc(), usize::from(bit).div_ceil(8))
 }

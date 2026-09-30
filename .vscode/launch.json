@@ -6,12 +6,6 @@
             "name": "test",
             "request": "launch",
             "command": "npm test"
-        },
-        {
-            "type": "node",
-            "name": "test:inspect-brk",
-            "request": "attach",
-            "port": 9230
         }
     ]
 }

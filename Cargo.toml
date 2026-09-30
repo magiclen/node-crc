@@ -2,8 +2,8 @@
 name = "node-crc"
 version = "4.0.0"
 authors = ["Magic Len <len@magiclen.org>"]
-edition = "2021"
-rust-version = "1.65"
+edition = "2024"
+rust-version = "1.88"
 repository = "https://github.com/magiclen/node-crc"
 homepage = "https://magiclen.org/node-js-crc/"
 keywords = ["nodejs", "crc8", "crc16", "crc32", "crc64"]
@@ -20,13 +20,12 @@ lto = true
 codegen-units = 1
 
 [dependencies]
-napi = "2"
-napi-derive = "2"
+napi-derive = "3.6.9"
+crc-any = "3.1.0"
+
+[dependencies.napi]
+version = "3.13.0"
+features = ["napi6"]
 
 [build-dependencies]
-napi-build = "2"
-
-[dependencies.crc-any]
-version = "2"
-default-features = false
-features = ["heapless"]
+napi-build = "2.5.0"

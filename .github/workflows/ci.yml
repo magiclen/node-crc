@@ -1,58 +1,92 @@
 name: CI
 
-on: [ push, pull_request ]
-
-env:
-  CARGO_TERM_COLOR: always
+on: [push, pull_request]
 
 jobs:
-  rustfmt:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions-rust-lang/setup-rust-toolchain@v1
-        with:
-          toolchain: nightly
-          components: rustfmt
-      - uses: actions-rust-lang/rustfmt@v1
+    rustfmt:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v7
+            - uses: actions-rust-lang/setup-rust-toolchain@v2
+              with:
+                  toolchain: nightly
+                  components: rustfmt
+            - run: cargo +nightly fmt -- --check
 
-  clippy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions-rust-lang/setup-rust-toolchain@v1
-        with:
-          components: clippy
-      - run: cargo clippy --all-targets --all-features -- -D warnings
+    clippy:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v7
+            - uses: actions-rust-lang/setup-rust-toolchain@v2
+              with:
+                  toolchain: stable
+                  components: clippy
+            - run: cargo clippy --locked --all-targets --all-features -- -D warnings
 
-  tests:
-    strategy:
-      fail-fast: false
-      matrix:
-        os:
-          - ubuntu-latest
-          - macos-latest
-          - windows-latest
-        toolchain:
-          - 1.65
-          - stable
-          - nightly
-        node-version:
-          - 20.x
-          - 22.x
-    name: Use ${{ matrix.node-version }} on ${{ matrix.os }} (Rust ${{ matrix.toolchain }})
-    runs-on: ${{ matrix.os }}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions-rust-lang/setup-rust-toolchain@v1
-        with:
-          toolchain: ${{ matrix.toolchain }}
-      - uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
-      - uses: pnpm/action-setup@v4
-        with:
-          version: latest
-      - run: pnpm install
-      - run: npm run build --if-present
-      - run: npm test
+    check:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v7
+            - uses: actions-rust-lang/setup-rust-toolchain@v2
+              with:
+                  toolchain: stable
+            - uses: pnpm/action-setup@v6
+              with:
+                  version: 12.6.0
+            - uses: actions/setup-node@v7
+              with:
+                  node-version: 24.x
+                  cache: pnpm
+            - run: pnpm install --frozen-lockfile
+            - run: npm run install
+            - run: npm run check
+
+    tests:
+        strategy:
+            fail-fast: false
+            matrix:
+                os:
+                    - ubuntu-latest
+                    - macos-latest
+                    - windows-latest
+                node-version:
+                    - 24.x
+                    - 26.x
+                toolchain:
+                    - stable
+                    - nightly
+        name: Node ${{ matrix.node-version }} on ${{ matrix.os }} (Rust ${{ matrix.toolchain }})
+        runs-on: ${{ matrix.os }}
+        steps:
+            - uses: actions/checkout@v7
+            - uses: actions-rust-lang/setup-rust-toolchain@v2
+              with:
+                  toolchain: ${{ matrix.toolchain }}
+            - uses: pnpm/action-setup@v6
+              with:
+                  version: 12.6.0
+            - uses: actions/setup-node@v7
+              with:
+                  node-version: ${{ matrix.node-version }}
+                  cache: pnpm
+            - run: cargo test --locked
+            - run: pnpm install --frozen-lockfile
+            - run: npm run build
+            - run: npm test
+
+    MSRV:
+        strategy:
+            fail-fast: false
+            matrix:
+                os:
+                    - ubuntu-latest
+                    - macos-latest
+                    - windows-latest
+        name: Rust 1.88 on ${{ matrix.os }}
+        runs-on: ${{ matrix.os }}
+        steps:
+            - uses: actions/checkout@v7
+            - uses: actions-rust-lang/setup-rust-toolchain@v2
+              with:
+                  toolchain: "1.88"
+            - run: cargo test --lib --bins --locked
